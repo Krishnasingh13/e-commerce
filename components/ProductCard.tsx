@@ -51,8 +51,11 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
           $ {product.price}
         </p>
         <div className="mt-2 flex items-center space-x-2">
-          {product.tags.map((tag) => (
-            <span className="block cursor-pointer rounded-md border border-gray-300 p-1 px-2 text-xs font-medium">
+          {product.tags.map((tag, idx) => (
+            <span
+              key={idx}
+              className="block cursor-pointer rounded-md border border-gray-300 p-1 px-2 text-xs font-medium"
+            >
               {tag}
             </span>
           ))}
