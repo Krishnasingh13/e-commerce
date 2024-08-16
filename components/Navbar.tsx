@@ -12,8 +12,8 @@ const Navbar = () => {
       <Link href={{ pathname: "/" }}>
         <span className="text-xl font-bold">E-commerce</span>
       </Link>
-      <Link href={{ pathname: "/cart" }} className=" relative p-4">
-        <span className="text-white rounded-full bg-red-500 absolute top-1.5 right-1.5 text-xs px-2 py-1">
+      <Link href={{ pathname: "/cart" }} className="relative p-4">
+        <span className="absolute right-1.5 top-1.5 rounded-full bg-red-500 px-2 py-1 text-xs text-white">
           {cart.totalQuantity}
         </span>
         <div className="">

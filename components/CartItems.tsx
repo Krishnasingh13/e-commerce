@@ -8,7 +8,7 @@ import Image from "next/image";
 import React from "react";
 import { useDispatch } from "react-redux";
 
-interface CartProductProps {
+interface CartItemsProps {
   product: {
     id: string;
     thumbnail: string;
@@ -18,16 +18,16 @@ interface CartProductProps {
   };
 }
 
-const CartProduct: React.FC<CartProductProps> = ({ product }) => {
+const CartItems: React.FC<CartItemsProps> = ({ product }) => {
   const dispatch = useDispatch();
 
   return (
-    <div className="px-8 py-2 shadow-md rounded-xl mt-10">
+    <div className="mt-10 rounded-xl px-8 py-2 shadow-md">
       <li className="flex py-6 sm:py-6">
-        <div className="flex-shrink-0 border rounded-xl group">
+        <div className="group flex-shrink-0 rounded-xl border">
           <Image
             src={product.thumbnail}
-            className="sm:h-38 sm:w-38 h-24 w-24 rounded-md object-contain object-center group-hover:scale-110 transition-all duration-300"
+            className="sm:h-38 sm:w-38 h-24 w-24 rounded-md object-contain object-center transition-all duration-300 group-hover:scale-110"
             alt="thumbnail"
             width={500}
             height={500}
@@ -85,4 +85,4 @@ const CartProduct: React.FC<CartProductProps> = ({ product }) => {
   );
 };
 
-export default CartProduct;
+export default CartItems;

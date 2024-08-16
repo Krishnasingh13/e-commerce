@@ -26,7 +26,7 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
         price: product.price,
         quantity: 1,
         totalPrice: product.price,
-      })
+      }),
     );
 
     toast.success(`Product added to cart successfully!`, {
@@ -35,7 +35,7 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
   };
 
   return (
-    <div className="group h-full flex flex-col justify-between overflow-hidden rounded-md border">
+    <div className="group flex h-full flex-col justify-between overflow-hidden rounded-md border">
       <Image
         src={product.thumbnail}
         alt="thumbnail image"
@@ -62,7 +62,7 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
         </div>
         <button
           onClick={() => handleAddToCart()}
-          className="mt-4 w-full rounded-md bg-black px-2 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+          className="mt-4 w-full rounded-md bg-black px-2 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-black/80"
         >
           Add to Cart
         </button>
