@@ -3,7 +3,7 @@ import React from "react";
 
 const EmptyCartMessage = () => {
   return (
-    <div>
+    <div className="pt-20">
       <h1 className="text-center text-3xl font-bold tracking-tight text-gray-900">
         No Products in shopping cart
       </h1>

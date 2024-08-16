@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 interface CartItem {
@@ -53,9 +54,11 @@ const PriceDetails: React.FC<PriceDetailsProps> = ({ cart }) => {
         </dd>
       </div>
       <div className="pt-3">
-        <button className="w-full rounded-md bg-black px-2 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-black/80">
-          Checkout
-        </button>
+        <Link href={{ pathname: "/checkout" }}>
+          <button className="mt-4 w-full rounded-md border bg-black px-2 py-1.5 text-sm font-semibold text-white transition-all duration-300 hover:border-black hover:bg-white hover:text-black">
+            Checkout
+          </button>
+        </Link>
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ const CartItems: React.FC<CartItemsProps> = ({ product }) => {
   const dispatch = useDispatch();
 
   return (
-    <div className="mt-10 rounded-xl px-8 py-2 shadow-md">
+    <div className="mb-10 rounded-xl px-8 py-2 shadow-md">
       <li className="flex py-6 sm:py-6">
         <div className="group flex-shrink-0 rounded-xl border">
           <Image

@@ -35,7 +35,7 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
   };
 
   return (
-    <div className="group flex h-full flex-col justify-between overflow-hidden rounded-md border">
+    <div className="group flex h-full flex-col justify-between overflow-hidden rounded-md border shadow-md">
       <Image
         src={product.thumbnail}
         alt="thumbnail image"
@@ -62,7 +62,7 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
         </div>
         <button
           onClick={() => handleAddToCart()}
-          className="mt-4 w-full rounded-md bg-black px-2 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-black/80"
+          className="mt-4 w-full rounded-md border bg-black px-2 py-1.5 text-sm font-semibold text-white transition-all duration-300 hover:border-black hover:bg-white hover:text-black"
         >
           Add to Cart
         </button>
