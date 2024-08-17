@@ -1,6 +1,8 @@
 import InputField from "@/components/InputField";
+import { RootState } from "@/store";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { z } from "zod";
 
@@ -24,6 +26,14 @@ type FormErrors = Partial<Record<keyof FormData, string>>;
 
 const Index = () => {
   const router = useRouter();
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+
+  useEffect(() => {
+    if (cartItems.length === 0) {
+      router.push("/cart"); 
+    }
+  }, [cartItems, router]);
+  
   const [formData, setFormData] = useState<FormData>({
     name: "",
     cardNum: "",
