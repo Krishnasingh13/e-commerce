@@ -22,15 +22,15 @@ const CartItems: React.FC<CartItemsProps> = ({ product }) => {
   const dispatch = useDispatch();
 
   return (
-    <div className="mb-10 rounded-xl px-8 py-2 shadow-md">
-      <li className="flex py-6 sm:py-6">
-        <div className="group flex-shrink-0 rounded-xl border">
+    <div className="mb-10 rounded-xl shadow-md md:px-4">
+      <li className="flex p-3 sm:py-6 md:py-6">
+        <div className="group flex-shrink-0 rounded-xl border-[0px] md:border-[1px]">
           <Image
             src={product.thumbnail}
-            className="sm:h-38 sm:w-38 h-24 w-24 rounded-md object-contain object-center transition-all duration-300 group-hover:scale-110"
+            className="sm:h-38 sm:w-38 aspect-square h-24 w-24 rounded-md object-contain object-center transition-all duration-300 group-hover:scale-110"
             alt="thumbnail"
-            width={500}
-            height={500}
+            width={200}
+            height={200}
           />
         </div>
         <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
@@ -48,7 +48,7 @@ const CartItems: React.FC<CartItemsProps> = ({ product }) => {
               </div>
             </div>
           </div>
-          <div className="mb-2 flex">
+          <div className="mt-2 flex flex-wrap items-start gap-2">
             <div className="flex min-w-24">
               <button
                 onClick={() => dispatch(decreaseQuantity(product.id))}

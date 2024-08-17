@@ -39,7 +39,7 @@ const ProductCard: React.FC<ProductProps> = ({ product }) => {
       <Image
         src={product.thumbnail}
         alt="thumbnail image"
-        className="aspect-[16/9] w-full rounded-md transition-all duration-300 group-hover:scale-110 md:aspect-auto md:h-[300px] lg:h-[200px]"
+        className="aspect-square w-full rounded-md transition-all duration-300 group-hover:scale-110 md:aspect-auto md:h-[300px] lg:h-[200px]"
         width={500}
         height={500}
       />

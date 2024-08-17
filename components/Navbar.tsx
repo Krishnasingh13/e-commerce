@@ -25,7 +25,7 @@ const Navbar = () => {
       }
     };
 
-    handleScroll(); // Call initially to check if the page is already scrolled
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
 
     return () => {
@@ -38,7 +38,7 @@ const Navbar = () => {
       ref={navRef}
       className={`${
         isScrolled ? "shadow-xl" : ""
-      } sticky left-0 top-0 z-[999] w-full bg-white py-2`}
+      } sticky left-0 top-0 z-[999] w-full bg-white px-4 py-2 md:px-0`}
     >
       <div className="container flex items-center justify-between">
         <Link href={{ pathname: "/" }}>

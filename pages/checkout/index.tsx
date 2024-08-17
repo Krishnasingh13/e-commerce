@@ -1,176 +1,201 @@
-import Link from "next/link";
-import React from "react";
+import InputField from "@/components/InputField";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { z } from "zod";
+
+const checkoutSchema = z.object({
+  name: z.string().min(1, { message: "Full Name is required" }),
+  cardNum: z.string().length(16, { message: "Card number must be 16 digits" }),
+  expirationDate: z.string().regex(/^(0[1-9]|1[0-2])\/([0-9]{2})$/, {
+    message: "Expiration date must be in MM/YY format",
+  }),
+  cvc: z
+    .string()
+    .min(3, { message: "CVC must be at least 3 digits" })
+    .max(4, { message: "CVC must be at most 4 digits" }),
+  address: z.string().min(1, { message: "Address is required" }),
+  city: z.string().min(1, { message: "City is required" }),
+  region: z.string().min(1, { message: "State/Province is required" }),
+});
+
+type FormData = z.infer<typeof checkoutSchema>;
+type FormErrors = Partial<Record<keyof FormData, string>>;
 
 const Index = () => {
+  const router = useRouter();
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    cardNum: "",
+    expirationDate: "",
+    cvc: "",
+    address: "",
+    city: "",
+    region: "",
+  });
+
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    if (name === "cardNum" || name === "expirationDate" || name === "cvc") {
+      const numericValue = value.replace(/\D/g, "");
+
+      if (name === "cardNum" && numericValue.length <= 16) {
+        setFormData({ ...formData, [name]: numericValue });
+      } else if (name === "expirationDate") {
+        let formattedValue = numericValue;
+        if (numericValue.length > 2) {
+          formattedValue = `${numericValue.slice(0, 2)}/${numericValue.slice(2, 4)}`;
+        }
+        setFormData({ ...formData, [name]: formattedValue });
+      } else if (name === "cvc" && numericValue.length <= 4) {
+        setFormData({ ...formData, [name]: numericValue });
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const result = checkoutSchema.safeParse(formData);
+
+    if (!result.success) {
+      const formattedErrors = result.error.flatten().fieldErrors;
+      setErrors(formattedErrors as FormErrors);
+    } else {
+      toast.success("Successfully order is placed!");
+      router.push("/");
+    }
+  };
+
   return (
     <div className="container">
-      <div className="overflow-hidden rounded-xl shadow">
-        <div className="grid grid-cols-1">
-          <div className="px-5 py-6 text-gray-900 md:px-8">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              Checkout
-            </h1>
-            <div className="divide-y divide-gray-200">
-              <div className="py-3">
-                <div className="px-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Contact information
-                    </h3>
-                    <div className="mt-1 w-full">
-                      <label
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        htmlFor="name"
-                      >
-                        Full Name
-                      </label>
-                      <input
-                        className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                        type="text"
-                        placeholder="Enter your name"
-                      />
+      <form onSubmit={handleSubmit}>
+        <div className="overflow-hidden rounded-xl shadow">
+          <div className="grid grid-cols-1">
+            <div className="px-2 py-6 text-gray-900 md:px-8">
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                Checkout
+              </h1>
+              <div className="divide-y divide-gray-200">
+                <div className="py-3">
+                  <div className="px-4">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Contact information
+                      </h3>
+                      <div className="mt-1 w-full">
+                        <InputField
+                          label="Full Name"
+                          name="name"
+                          placeholder="Enter your name"
+                          value={formData.name}
+                          onChange={handleChange}
+                          error={errors.name}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <hr className="mb-4 mt-8" />
-                  <div className="">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Payment details
-                    </h3>
-                    <div className="mt-2 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4">
-                      <div className="col-span-3 sm:col-span-4">
-                        <label
-                          htmlFor="cardNum"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Card number
-                        </label>
-                        <div className="mt-1">
-                          <input
-                            className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                            type="text"
+                    <hr className="mb-4 mt-8" />
+                    <div className="">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Payment details
+                      </h3>
+                      <div className="mt-2 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4">
+                        <div className="col-span-3 sm:col-span-4">
+                          <InputField
+                            label="Card number"
+                            name="cardNum"
                             placeholder="4242 4242 4242 4242"
+                            value={formData.cardNum}
+                            onChange={handleChange}
+                            error={errors.cardNum}
+                            inputMode="numeric"
+                            pattern="\d{16}"
                           />
                         </div>
-                      </div>
-                      <div className="col-span-2 sm:col-span-3">
-                        <label
-                          htmlFor="expiration-date"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Expiration date (MM/YY)
-                        </label>
-                        <div className="mt-1">
-                          <input
-                            type="date"
-                            name="expiration-date"
-                            autoComplete="cc-exp"
-                            className="block h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                        <div className="col-span-2 sm:col-span-3">
+                          <InputField
+                            label="Expiration date (MM/YY)"
+                            name="expirationDate"
+                            placeholder="MM/YY"
+                            value={formData.expirationDate}
+                            onChange={handleChange}
+                            error={errors.expirationDate}
+                            inputMode="numeric"
+                            pattern="\d{2}/\d{2}"
                           />
                         </div>
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="cvc"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          CVC
-                        </label>
-                        <div className="mt-1">
-                          <input
-                            type="text"
+                        <div>
+                          <InputField
+                            label="CVC"
                             name="cvc"
-                            autoComplete="csc"
-                            className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                            placeholder="Enter Your CVC Number"
+                            value={formData.cvc}
+                            onChange={handleChange}
+                            error={errors.cvc}
+                            inputMode="numeric"
+                            pattern="\d{3,4}"
                           />
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <hr className="mb-4 mt-8" />
-                  <div className="">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Shipping address
-                    </h3>
-                    <div className="mt-2 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-3">
-                      <div className="sm:col-span-3">
-                        <label
-                          htmlFor="address"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Address
-                        </label>
-                        <div className="mt-1">
-                          <input
-                            type="text"
+                    <hr className="mb-4 mt-8" />
+                    <div className="">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Shipping address
+                      </h3>
+                      <div className="mt-2 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                        <div className="sm:col-span-2">
+                          <InputField
+                            label="Address"
                             name="address"
-                            autoComplete="street-address"
-                            className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                            placeholder="Enter Your Address"
+                            value={formData.address}
+                            onChange={handleChange}
+                            error={errors.address}
                           />
                         </div>
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="city"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          City
-                        </label>
-                        <div className="mt-1">
-                          <input
-                            type="text"
+                        <div>
+                          <InputField
+                            label="City"
                             name="city"
-                            autoComplete="address-level2"
-                            className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                            placeholder="Enter Your City"
+                            value={formData.city}
+                            onChange={handleChange}
+                            error={errors.city}
                           />
                         </div>
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="region"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          State / Province
-                        </label>
-                        <div className="mt-1">
-                          <input
-                            type="text"
+                        <div>
+                          <InputField
+                            label="State / Province"
                             name="region"
-                            autoComplete="address-level1"
-                            className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label
-                          htmlFor="postal-code"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          Postal code
-                        </label>
-                        <div className="mt-1">
-                          <input
-                            type="text"
-                            name="postal-code"
-                            autoComplete="postal-code"
-                            className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                            placeholder="Enter Your State"
+                            value={formData.region}
+                            onChange={handleChange}
+                            error={errors.region}
                           />
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="mt-10 flex justify-end border-t border-gray-200 pt-6">
-                    <Link href={{ pathname: "/" }}>
-                      <button className="mt-1 w-fit rounded-md border bg-black px-4 py-1.5 text-sm font-semibold text-white transition-all duration-300 hover:border-black hover:bg-white hover:text-black">
+                    <div className="mt-10 flex justify-end border-t border-gray-200 pt-6">
+                      <button
+                        type="submit"
+                        className="mt-1 w-fit rounded-md border bg-black px-4 py-1.5 text-sm font-semibold text-white transition-all duration-300 hover:border-black hover:bg-white hover:text-black"
+                      >
                         Make payment
                       </button>
-                    </Link>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

@@ -66,7 +66,7 @@ const Index: React.FC = () => {
       <h1 className="text-3xl font-bold tracking-tight text-gray-900">
         Shopping
       </h1>
-      <div className="grid items-center space-y-4 px-2 py-5 md:grid-cols-2 md:gap-6 md:space-y-0 lg:grid-cols-4">
+      <div className="grid items-center space-y-4 px-2 py-5 md:grid-cols-2 gap-6 md:gap-6 md:space-y-0 lg:grid-cols-4">
         {products.length === 0 && !loading ? (
           <p className="text-center text-gray-500">No products found</p>
         ) : (

@@ -17,12 +17,15 @@ interface CartState {
 
 interface PriceDetailsProps {
   cart: CartState;
+  finalAmount: number;
+  discount: number;
 }
 
-const PriceDetails: React.FC<PriceDetailsProps> = ({ cart }) => {
-  const discount = cart.totalAmount * 0.1;
-  const finalAmount = cart.totalAmount - discount;
-
+const PriceDetails: React.FC<PriceDetailsProps> = ({
+  cart,
+  finalAmount,
+  discount,
+}) => {
   return (
     <div className="space-y-1 px-2 py-4">
       <div className="flex items-center justify-between">
@@ -48,14 +51,14 @@ const PriceDetails: React.FC<PriceDetailsProps> = ({ cart }) => {
         <dd className="text-sm font-medium text-green-700">Free</dd>
       </div>
       <div className="flex items-center justify-between border-y border-dashed py-4">
-        <dt className="text-base font-medium text-gray-900">Total Amount</dt>
+        <div className="text-base font-medium text-gray-900">Total Amount</div>
         <dd className="text-base font-medium text-gray-900">
           $ {finalAmount.toFixed(2)}
         </dd>
       </div>
       <div className="pt-3">
         <Link href={{ pathname: "/checkout" }}>
-          <button className="mt-4 w-full rounded-md border bg-black px-2 py-1.5 text-sm font-semibold text-white transition-all duration-300 hover:border-black hover:bg-white hover:text-black">
+          <button className="mt-4 hidden w-full rounded-md border bg-black px-2 py-1.5 text-sm font-semibold text-white transition-all duration-300 hover:border-black hover:bg-white hover:text-black md:block">
             Checkout
           </button>
         </Link>
